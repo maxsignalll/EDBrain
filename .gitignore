@@ -1,2 +1,4 @@
 *.db
 *.rar
+.idea/
+__pycache__/
