@@ -1,21 +1,25 @@
-
-
-class RewardCacheUnit:
-    def __init__(self, table_set, db, table_size, init_reward):
-        self.table_set = table_set
-        self.table_size = table_size
-        self.db = db
-        self.init_reward = init_reward
+"""
+Reward cache.
+"""
 
 
 class RewardCache:
+    """
+    Reward cache of EDBrain.
+    """
     def __init__(self):
         self.cache_map = {}
 
     def add_cache(self, table_set, db, table_size, init_reward):
+        """
+        Add cache.
+        """
         self.cache_map[(db, frozenset(table_set))] = (table_size, init_reward)
 
     def get_from_path(self, cache_path):
+        """
+        Get reward cache from cache path.
+        """
         with open(cache_path, 'r') as f:
             lines = f.readlines()
             for line in lines:
@@ -26,6 +30,9 @@ class RewardCache:
                 self.cache_map[(int(split_line[1]), frozenset(table_set))] = (float(split_line[2]), float(split_line[3]))
 
     def find_cache(self, table_set, db, table_size):
+        """
+        Find cache of one model.
+        """
         cache_tuple = self.cache_map.get((db, frozenset(table_set)), None)
         if cache_tuple is not None:
             if abs(cache_tuple[0] - table_size) / table_size > 0.1:
@@ -36,6 +43,9 @@ class RewardCache:
             return -2
 
     def write(self, cache_path):
+        """
+        Write back reward.
+        """
         with open(cache_path, 'w') as f:
             for cache_db, table_set in self.cache_map.keys():
                 unit_str = ""
@@ -47,6 +57,9 @@ class RewardCache:
                 f.write(unit_str)
 
     def update(self, table_set, db, table_size, init_reward):
+        """
+        Update reward cache.
+        """
         self.cache_map[(db, frozenset(table_set))] = (table_size, init_reward)
 
 

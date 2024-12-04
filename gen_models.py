@@ -1,3 +1,7 @@
+"""
+Generate models.
+As a demonstration alternative to the identification step.
+"""
 import random
 import sqlite3
 import time

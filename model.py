@@ -1,6 +1,13 @@
+"""
+Model.
+"""
 
 
 class Model:
+    """
+    Model class.
+    An abstraction of repeated query sequences.
+    """
     def __init__(self, db, tables, cost, rerun_times):
         self.tables = tables
         self.db = db

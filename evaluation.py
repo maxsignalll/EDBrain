@@ -1,3 +1,6 @@
+"""
+Model evaluation code.
+"""
 
 
 def evaluation(all_models, max_memory):

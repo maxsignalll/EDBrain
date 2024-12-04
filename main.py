@@ -1,3 +1,6 @@
+"""
+Main.
+"""
 from gen_models import *
 from cost import *
 from evaluation import *
