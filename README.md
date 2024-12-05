@@ -9,14 +9,14 @@ Then, the algorithm will output the selected model for each database and, at the
 
 ## File Structure Overview
 /project-root\
-├── /data # TPC-C data .sql files to build .db for test.\
-├── config.ini  # Config file of test. \
-├── cost.py  # Calculate cost of each model and proportion of each db. \
-├── evaluation.py  # Evaluate models and select one best for each db. \
-├── gen_models.py  # Generate models instead of identification in workload. \
-├── main.py  # Main function of test. \
-├── reward.py  # Calculate exact reward by workload replay and reward cache. \
-├── reward_cache.py  # Reward cache of models. \
-├── reward_cache.txt  # Reward cache file. \
-├── test_models.txt  # Test default and EDBrain by generated workload. \
-└── tpcc.txt  # All queries in TPC-C benchmark for test. 
+├── **/data** _# TPC-C data .sql files to build .db for test._\
+├── **config.ini**  _# Config file of test._ \
+├── **cost.py**  _# Calculate cost of each model and proportion of each db._ \
+├── **evaluation.py**  _# Evaluate models and select one best for each db._ \
+├── **gen_models.py**  _# Generate models instead of identification in workload._ \
+├── **main.py**  _# Main function of test._ \
+├── **reward.py**  _# Calculate exact reward by workload replay and reward cache._ \
+├── **reward_cache.py**  _# Reward cache of models._ \
+├── **reward_cache.txt**  _# Reward cache file._ \
+├── **test_models.txt**  _# Test default and EDBrain by generated workload._ \
+└── **tpcc.txt**  _# All queries in TPC-C benchmark for test._ 
