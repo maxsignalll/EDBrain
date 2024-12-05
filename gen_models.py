@@ -10,10 +10,10 @@ from model import Model
 from reward import obtain_reward
 
 
-def gen_models(db_num, one_repeat, query_num, query_list, table_size, db_path):
+def gen_models(db_num, one_repeat, query_num, query_list, table_size, db_name):
     """
     generate models for test.
-    :param db_path: database path.
+    :param db_name: name of database.
     :param db_num: number of databases.
     :param one_repeat: number of models for one database.
     :param query_num: number of queries.
@@ -26,6 +26,7 @@ def gen_models(db_num, one_repeat, query_num, query_list, table_size, db_path):
         one_repeat = query_num - 1
     for i in range(db_num):
         model_list = []
+        db_path = f"{db_name}{i}.db"
         for _ in range(one_repeat):  # generate several models for one db.
             one_random = random.randint(1, 10)
             if one_random < 6:  # 1 query model is 0.5, 2 and 3 are 0.25
@@ -47,7 +48,7 @@ def gen_models(db_num, one_repeat, query_num, query_list, table_size, db_path):
                         model_set.append(table_set)
                 rerun_times = random.randint(5, 15)
                 one_cost = table_size[one_query_num]
-                model = Model(db=i, tables=[one_query_num], cost=one_cost/1024, rerun_times=rerun_times)
+                model = Model(db=i, tables=[one_query_num], cost=one_cost / 1024, rerun_times=rerun_times)
                 # get reward.
                 reward = obtain_reward(model, db_path, query_candidate=query_list)
                 model.init_reward = reward
@@ -87,14 +88,14 @@ def gen_models(db_num, one_repeat, query_num, query_list, table_size, db_path):
                 for num in selected_numbers:
                     multi_cost += table_size[num]
                 # model replay for test.
-                model = Model(db=i, tables=selected_numbers, cost=multi_cost/1024, rerun_times=rerun_times)
+                model = Model(db=i, tables=selected_numbers, cost=multi_cost / 1024, rerun_times=rerun_times)
                 reward = obtain_reward(model, db_path, query_candidate=query_list)
                 model.init_reward = reward
                 model_list.append(model)
         all_models.append(model_list)
-    print("All Models:")
-    print(all_models)
-    print("")
+    # print("All Models:")
+    # print(all_models)
+    # print("")
     return all_models
 
 
@@ -120,9 +121,10 @@ def gen_query_list_from_models(all_models, query_length, query_num):
     return all_query_list
 
 
-def gen_test_workload(best_models, efficient_rate, query_num, workload_length):
+def gen_test_workload(best_models, efficient_rate, query_num, workload_length, db_num):
     """
     generate workload list for test based on models.
+    :param db_num: number of databases.
     :param workload_length: workload list length.
     :param query_num: different query candidate number for generating.
     :param efficient_rate: efficient query rate(queries in models).
@@ -130,24 +132,35 @@ def gen_test_workload(best_models, efficient_rate, query_num, workload_length):
     :return: workload list for test.
     """
     workload_list = []
-    for i in range(len(best_models)):
-        model = best_models[i]
-        query_list = model[0]
-        other_query_list = []
-        for x in range(query_num):
-            if x not in query_list:
-                other_query_list.append(x)
-        model_len = int(workload_length * efficient_rate)
-        selected_numbers = []
-        for _ in range(model_len):
-            selected_numbers.extend(random.sample(query_list, 1))
-        random_length = workload_length - model_len
-        random_numbers = []
-        if len(other_query_list) != 0:
-            for _ in range(random_length):
-                random_numbers.extend(random.sample(other_query_list, 1))
-        final_numbers = query_list + selected_numbers + random_numbers
-        workload_list.append(final_numbers)
+    for i in range(db_num):
+        for model in best_models:
+            if model.db == i:
+                query_list = model.tables
+                other_query_list = []
+                for x in range(query_num):
+                    if x not in query_list:
+                        other_query_list.append(x)
+                model_len = int(workload_length * efficient_rate)
+                selected_numbers = []
+                for _ in range(model_len):
+                    selected_numbers.extend(random.sample(query_list, 1))
+                random_length = workload_length - model_len
+                random_numbers = []
+                if len(other_query_list) != 0:
+                    for _ in range(random_length):
+                        random_numbers.extend(random.sample(other_query_list, 1))
+                final_numbers = query_list + selected_numbers + random_numbers
+                workload_list.append(final_numbers)
+            else:
+                other_query_list = []
+                for x in range(query_num):
+                    other_query_list.append(x)
+                random_numbers = []
+                for _ in range(workload_length):
+                    random_numbers.extend(random.sample(other_query_list, 1))
+                final_numbers = random_numbers
+                workload_list.append(final_numbers)
+
     return workload_list
 
 

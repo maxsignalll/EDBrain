@@ -1,9 +1,8 @@
 # EDBrain
-## From ICDE paper: **_**EDBrain: Efficient Cache Tuning for Embedded Databases**_**
+From ICDE paper: **_**EDBrain: Efficient Cache Tuning for Embedded Databases**_**
 
 ## How to use:
-1. Need a TPC-C benchmark .db SQLite database file and specify its location in the config.ini file.
-2. Make sure that Python has SQLite3 support enabled.
-3. Run the main function in the main.py file. The code will output the selected model for each database.
+    python3 ./main.py
 
-It is important to note that this part of the code is a relatively simple implementation.
+During the first run, the database will be initialized. Each database is approximately 350MB. \
+Then, the algorithm will output the selected model for each database and, at the end, compare the models with the default method.

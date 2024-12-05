@@ -2,3 +2,5 @@
 *.rar
 .idea/
 __pycache__/
+data/data_sql/STOCK.sql
+data/data_sql/ORDER_LINE.sql
